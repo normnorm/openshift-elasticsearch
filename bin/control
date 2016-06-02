@@ -27,18 +27,6 @@ function _is_nginx_running() {
   return 1
 }
 
-function _is_kibana_running() {
-  if [ -f $KIBANA_PID_FILE ]; then
-    local zpid=$(cat $KIBANA_PID_FILE 2> /dev/null)
-    local myid=$(id -u)
-    if `ps -opid,args --pid $zpid 2>&1 &> /dev/null`; then
-      return 0
-    fi
-  fi
-
-  return 1
-}
-
 function start() {
   if _is_running; then
     echo "ElasticSearch is already running" 1>&2
@@ -67,23 +55,6 @@ function start() {
       echo "WARN: Could not find the compiled application versions/$NGINX_VERSION/bin/nginx, will not start"
   fi
 
-  echo "Starting Kibana"
-  if [ -f "$OPENSHIFT_REPO_DIR/kibana.yml.erb" ]; then
-      oo-erb $OPENSHIFT_REPO_DIR/kibana.yml.erb > $OPENSHIFT_REPO_DIR/kibana.yml
-      # copy to right location
-      cp $OPENSHIFT_REPO_DIR/kibana.yml $OPENSHIFT_ELASTICSEARCH_DIR/kibana/config/kibana.yml
-    	cp $OPENSHIFT_REPO_DIR/kibana.yml $OPENSHIFT_ELASTICSEARCH_DIR/kibana/src/config/kibana.yml
-  fi
-
-  # Make sure elasticsearch is up and running first
-  esUrl="http://$OPENSHIFT_ELASTICSEARCH_IP:$OPENSHIFT_ELASTICSEARCH_PORT/$ELASTICSEARCH_PATH"
-  counter=0
-  until [ $(curl -s -o /dev/null -w '%{http_code}\n' $esUrl) -ge 500 -o $counter -gt 6 ]; do
-    echo "counter $counter"
-    let counter=counter+1
-    sleep 10
-  done
-  bash -c "$OPENSHIFT_ELASTICSEARCH_DIR/kibana/bin/kibana > $OPENSHIFT_ELASTICSEARCH_DIR/logs/kibana.log &"
 }
 
 function stop() {
@@ -117,24 +88,6 @@ function stop() {
     fi
   fi
 
-  echo "Stopping Kibana"
-  if [ -f $KIBANA_PID_FILE ]; then
-    local zpid=$(cat $KIBANA_PID_FILE 2> /dev/null)
-  fi
-
-  if [ -n $zpid ]; then
-    #/bin/kill $zpid
-    /bin/kill -0 "$zpid" > /dev/null
-    local ret=$?
-    if [ $ret -eq 0 ]; then
-      local TIMEOUT=10
-      while [ $TIMEOUT -gt 0 ] &&  _is_running ; do
-        /bin/kill -0 "$zpid" > /dev/null 2>&1  ||  break
-        sleep 1
-        let TIMEOUT=${TIMEOUT}-1
-      done
-    fi
-  fi
 }
 
 function restart() {
@@ -153,7 +106,6 @@ function status() {
 }
 
 function deploy() {
-  _install_kibana_version ${KIBANA_VERSION}
  _install_plugins
 }
 

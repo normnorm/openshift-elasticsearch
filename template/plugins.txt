@@ -73,12 +73,19 @@ mobz/elasticsearch-head
 ## Uncomment line below to install this plugin
 #polyfractal/elasticsearch-segmentspy
 
+## Description:
+## Plugin license for Marvel - etc.
+## 
+## URL:
+##   http://www.elasticsearch.org/overview/marvel/
+## Uncomment line below to install this plugin
+# license
 
 ## Description:
-##   Site plugin for Elasticsearch to add authentication and authorization
-##
+## Plugin shows the elasticsearch node and cluster stats.
+## Must install license first (uncomment it)
 ## URL:
-##   http://elastic.co
+##   http://www.elasticsearch.org/overview/marvel/
 
-#elasticsearch/license/latest
-#elasticsearch/shield/latest
+## Uncomment line below to install this plugin
+# marvel-agent

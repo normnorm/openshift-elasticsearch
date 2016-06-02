@@ -8,7 +8,6 @@ export NGINX_PID_FILE="$OPENSHIFT_ELASTICSEARCH_DIR/run/nginx.pid"
 export NGINX_VERSION=${NGINX_VERSION:-1.7.8}
 export NGINX_EXEC="$OPENSHIFT_ELASTICSEARCH_DIR/nginx/versions/$NGINX_VERSION/bin/nginx"
 export NGINX_CONFIG_FILE="$OPENSHIFT_ELASTICSEARCH_DIR/conf/nginx.conf"
-export KIBANA_PID_FILE="$OPENSHIFT_ELASTICSEARCH_DIR/run/kibana.pid"
 export ES_PLUGIN_CMD="$OPENSHIFT_ELASTICSEARCH_DIR/usr/bin/plugin -Des.path.plugins=$OPENSHIFT_DATA_DIR/elasticsearch-plugins"
 
 function _install_version()
@@ -22,21 +21,7 @@ function _install_version()
 
 	echo Downloading version $VERSION
 	mkdir $OPENSHIFT_ELASTICSEARCH_DIR/usr
-	curl https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$VERSION.tar.gz | tar xzf - --strip-components=1 -C $OPENSHIFT_ELASTICSEARCH_DIR/usr
-}
-
-function _install_kibana_version()
-{
-	local VERSION=$1
-
-	if [ -d $OPENSHIFT_ELASTICSEARCH_DIR/kibana ]; then
-		echo Removing old version
-		rm -rf $OPENSHIFT_ELASTICSEARCH_DIR/kibana
-	fi
-
-	echo Downloading version $VERSION
-	mkdir $OPENSHIFT_ELASTICSEARCH_DIR/kibana
-	curl https://download.elasticsearch.org/kibana/kibana/kibana-$VERSION-linux-x64.tar.gz | tar xzf - --strip-components=1 -C $OPENSHIFT_ELASTICSEARCH_DIR/kibana
+	curl https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/$VERSION/elasticsearch-$VERSION.tar.gz | tar xzf - --strip-components=1 -C $OPENSHIFT_ELASTICSEARCH_DIR/usr
 }
 
 
@@ -52,40 +37,29 @@ function _is_scalable()
 
 function _install_plugins()
 {
-  local old_plugins=$($ES_PLUGIN_CMD --list | awk '/-/{print $2}' | xargs)
+
+  local old_plugins=$($PLUGIN_CMD list | awk '/-/{print $2}' | xargs)
   if [ -n "$old_plugins"  -a "$old_plugins" != "No" ]; then #ARGH!
     echo "Removing old ElasticSearch plugins..."
     for plugin in $old_plugins; do
-      $ES_PLUGIN_CMD --remove $plugin
+      $PLUGIN_CMD remove $plugin
     done
   fi
 
-  if [ -e "$OPENSHIFT_REPO_DIR/plugins.txt" ]; then
-    echo "Installing ElasticSearch plugins from plugins.txt..."
+  echo "Installing ElasticSearch plugins..."
 
-    local plugins="$(grep -v '^#' $OPENSHIFT_REPO_DIR/plugins.txt 2>/dev/null | xargs)"
-    if [ "${plugins}" ]; then
-      for plugin in ${plugins}; do
-        local name=$(echo $plugin | cut -f 1 -d =)
-        local url=$(echo $plugin | cut -f 2 -d =)
-        if [ "$name" == "$url" ]; then
-          $ES_PLUGIN_CMD --install $name
-        else
-          eval $ES_PLUGIN_CMD --url $url --install $name
-        fi
-      done
-    fi
-  fi
+  local plugins="$(grep -v '^#' $OPENSHIFT_REPO_DIR/plugins.txt 2>/dev/null | xargs)"
 
-  if [ -d "$OPENSHIFT_REPO_DIR/plugins" ]; then
-    echo "Installing ElasticSearch plugins from plugins/..."
-
-    plugins=`find $OPENSHIFT_REPO_DIR/plugins/ -type f -name '*.zip'`
-    if [ "${plugins}" ]; then
-      for plugin in ${plugins}; do
-        $ES_PLUGIN_CMD --url file://$plugin --install `basename ${plugin%.*}`
-      done
-    fi
+  if [ "${plugins}" ]; then
+    for plugin in ${plugins}; do
+      local name=$(echo $plugin | cut -f 1 -d =)
+      local url=$(echo $plugin | cut -f 2 -d =)
+      if [ "$name" == "$url" ]; then
+        $PLUGIN_CMD install $name
+      else
+        $PLUGIN_CMD install $url
+      fi
+    done
   fi
 }
 

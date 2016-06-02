@@ -331,53 +331,18 @@ discovery.zen.ping.multicast.enabled: false
 #
 discovery.zen.ping.unicast.hosts: ${OPENSHIFT_ELASTICSEARCH_CLUSTER}
 
-# EC2 discovery allows to use AWS EC2 API in order to perform discovery.
 #
-# You have to install the cloud-aws plugin for enabling the EC2 discovery.
+# ---------------------------------- Marvel Logging -----------------------------------
 #
-# For more information, see
-# <http://elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-ec2.html>
+marvel.agent.enabled: true
+marvel.agent.exporter.es.hosts: ${OPENSHIFT_ELASTICSEARCH_IP}:${OPENSHIFT_ELASTICSEARCH_PORT}
+marvel.agent.interval: 60s
 #
-# See <http://elasticsearch.org/tutorials/elasticsearch-on-ec2/>
-# for a step-by-step tutorial.
+################################## Security ################################
 
-# GCE discovery allows to use Google Compute Engine API in order to perform discovery.
+# Uncomment if you want to enable JSONP as a valid return transport on the
+# http server. With this enabled, it may pose a security risk, so disabling
+# it unless you need it is recommended (it is disabled by default).
 #
-# You have to install the cloud-gce plugin for enabling the GCE discovery.
-#
-# For more information, see <https://github.com/elasticsearch/elasticsearch-cloud-gce>.
+http.jsonp.enable: true
 
-# Azure discovery allows to use Azure API in order to perform discovery.
-#
-# You have to install the cloud-azure plugin for enabling the Azure discovery.
-#
-# For more information, see <https://github.com/elasticsearch/elasticsearch-cloud-azure>.
-
-################################## Slow Log ##################################
-
-# Shard level query and fetch threshold logging.
-
-#index.search.slowlog.threshold.query.warn: 10s
-#index.search.slowlog.threshold.query.info: 5s
-#index.search.slowlog.threshold.query.debug: 2s
-#index.search.slowlog.threshold.query.trace: 500ms
-
-#index.search.slowlog.threshold.fetch.warn: 1s
-#index.search.slowlog.threshold.fetch.info: 800ms
-#index.search.slowlog.threshold.fetch.debug: 500ms
-#index.search.slowlog.threshold.fetch.trace: 200ms
-
-#index.indexing.slowlog.threshold.index.warn: 10s
-#index.indexing.slowlog.threshold.index.info: 5s
-#index.indexing.slowlog.threshold.index.debug: 2s
-#index.indexing.slowlog.threshold.index.trace: 500ms
-
-################################## GC Logging ################################
-
-#monitor.jvm.gc.young.warn: 1000ms
-#monitor.jvm.gc.young.info: 700ms
-#monitor.jvm.gc.young.debug: 400ms
-
-#monitor.jvm.gc.old.warn: 10s
-#monitor.jvm.gc.old.info: 5s
-#monitor.jvm.gc.old.debug: 2s
