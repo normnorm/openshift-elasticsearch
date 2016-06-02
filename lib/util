@@ -8,7 +8,7 @@ export NGINX_PID_FILE="$OPENSHIFT_ELASTICSEARCH_DIR/run/nginx.pid"
 export NGINX_VERSION=${NGINX_VERSION:-1.7.8}
 export NGINX_EXEC="$OPENSHIFT_ELASTICSEARCH_DIR/nginx/versions/$NGINX_VERSION/bin/nginx"
 export NGINX_CONFIG_FILE="$OPENSHIFT_ELASTICSEARCH_DIR/conf/nginx.conf"
-export ES_PLUGIN_CMD="$OPENSHIFT_ELASTICSEARCH_DIR/usr/bin/plugin -Des.path.plugins=$OPENSHIFT_DATA_DIR/elasticsearch-plugins"
+export PLUGIN_CMD="$OPENSHIFT_ELASTICSEARCH_DIR/usr/bin/plugin -Des.path.plugins=$OPENSHIFT_DATA_DIR/elasticsearch-plugins"
 
 function _install_version()
 {
