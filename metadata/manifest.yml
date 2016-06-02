@@ -1,12 +1,12 @@
 Name: elasticsearch
 Cartridge-Short-Name: ELASTICSEARCH
 Display-Name: Elasticsearch
-Description: "Elasticsearch is a flexible and powerful open source, distributed, real-time search and analytics engine. Architected from the ground up for use in distributed environments where reliability and scalability are must haves, Elasticsearch gives you the ability to move easily beyond simple full-text search."
+Description: "Elasticsearch is a flexible and powerful open source, distributed, real-time search and analytics engine. Architected from the ground up for use in distributed environments where reliability and scalability are must haves, Elasticsearch gives you the ability to move easily beyond simple full-text search. This cartridge includes NGINX for managing security and a proxy frontend"
 Version: 2.3.3
 License: MIT
 Vendor: elasticsearch.org
 Cartridge-Version: 2.0.0
-Cartridge-Vendor: unsalted
+Cartridge-Vendor: normnorm
 
 Categories:
   - web_framework
@@ -17,6 +17,8 @@ Provides:
   - elasticsearch-2
   - elasticsearch-2.3
   - elasticsearch-2.3.3
+  - nginx
+  - nginx-1.7
 
 Publishes:
   publish-unicast-host:

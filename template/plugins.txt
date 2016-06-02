@@ -19,29 +19,6 @@
 ################################################################################
 
 ## Description:
-##   The elasticsearch-jetty plugin brings full power of Jetty and adds
-##   several new features to elasticsearch. With this plugin elasticsearch can now
-##   handle SSL connections, support basic authentication, and log all or some
-##   incoming requests in plain text or json formats.
-##
-## URL:
-##   http://www.emergi.net/elasticsearch/plugins.html
-
-## Uncomment line below to install this plugin
-## You also need to edit file config/jetty.yml
-#jetty=https://s3.amazonaws.com/www.emergi.net/elasticsearch/plugins/elasticsearch-jetty-1.0.0.zip
-
-## Description:
-##   ElasticSearch-head is a web front end for browsing and
-##   interacting with an Elastic Search cluster.
-##
-## URL:
-##   http://mobz.github.io/elasticsearch-head
-
-## Uncomment line below to install this plugin
-mobz/elasticsearch-head
-
-## Description:
 ##   Paramedic is a simple yet sexy tool to monitor and inspect
 ##   ElasticSearch clusters. It displays real-time statistics and
 ##   information about your nodes and indices, as well as shard
@@ -52,26 +29,6 @@ mobz/elasticsearch-head
 
 ## Uncomment line below to install this plugin
 #karmi/elasticsearch-paramedic
-
-## Description:
-##   Site plugin for Elasticsearch to help understand and debug queries.
-##
-## URL:
-##   https://github.com/polyfractal/elasticsearch-inquisitor
-
-## Uncomment line below to install this plugin
-#polyfractal/elasticsearch-inquisitor
-
-## Description:
-##   SegmentSpy is a tool to watch the segments in your indices.
-##   Segment graphs update in real-time, allowing you to watch as
-##   ElasticSearch (Lucene) merges your segments
-##
-## URL:
-##   https://github.com/polyfractal/elasticsearch-segmentspy
-
-## Uncomment line below to install this plugin
-#polyfractal/elasticsearch-segmentspy
 
 ## Description:
 ## Plugin license for Marvel - etc.

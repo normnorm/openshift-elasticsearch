@@ -29,7 +29,7 @@
 # Cluster name identifies your cluster for auto-discovery. If you're running
 # multiple clusters on the same network, make sure you're using unique names.
 #
-cluster.name: elasticsearch-${OPENSHIFT_APP_UUID}
+cluster.name: ${OPENSHIFT_APP_NAME}-${OPENSHIFT_APP_UUID}
 
 #################################### Node #####################################
 
@@ -165,15 +165,6 @@ path.logs: ${OPENSHIFT_ELASTICSEARCH_DIR}/logs
 #
 path.plugins: ${OPENSHIFT_DATA_DIR}/elasticsearch-plugins
 
-
-#################################### Plugin ###################################
-
-# If a plugin listed here is not installed for current node, the node will not start.
-#
-#plugin.mandatory: mapper-attachments,lang-groovy
-shield.audit.enabled: true
-shield.transport.filter.enabled: false
-
 ################################### Memory ####################################
 
 # Elasticsearch performs poorly when JVM starts swapping: you should ensure that
@@ -206,11 +197,11 @@ network.bind_host: ${OPENSHIFT_ELASTICSEARCH_IP}
 # set, it is automatically derived. It must point to an actual IP address.
 #
 <% if ENV['SCALABLE'] == "1" %>
-network.publish_host: ${PUBLISH_HOST}
+network.publish_host: ${OPENSHIFT_GEAR_DNS}
 transport.publish_port: ${OPENSHIFT_ELASTICSEARCH_TRANSPORT_PROXY_PORT}
 <% else %>
 network.publish_host: ${OPENSHIFT_ELASTICSEARCH_IP}
-transport.publish_port: 9300
+transport.publish_port: ${OPENSHIFT_ELASTICSEARCH_TRANSPORT_PROXY_PORT}
 <% end %>
 
 # Set both 'bind_host' and 'publish_host':
