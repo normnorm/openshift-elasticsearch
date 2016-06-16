@@ -18,14 +18,7 @@ To add more nodes to the cluster, simply add more gears:
 ### Plugins
 To install Elasticsearch plugins, edit the `plugins.txt` file, commit, and push your changes.
 
-    cd elasticsearch
-    vim plugins.txt
-    git commit -a -m 'add plugin x'
-    git push
-
 You can also install plugins from a .zip file. Simply place it inside dir `plugins/`, git add, commit and push.
-
-Plugin urls will be served off of `/elasticsearch/_plugin/<name>/`.
 
 ### Configuration
 
