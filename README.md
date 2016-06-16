@@ -1,14 +1,14 @@
 OpenShift Elasticsearch Cartridge
 =================================
-This cartridge provides an Elasticsearch cluster as a standalone application with a Kibana 4.0 dashboard. Kibana is served on the root `/` and Elasticsearch on `/elasticsearch`. A health check url is also configured and is on `/health`.
+This cartridge provides an Elasticsearch cluster as a standalone application Elasticsearch.
 
 To create your Elasticsearch app, run:
 
-    rhc app-create https://cartreflect-claytondev.rhcloud.com/github/ajagnanan/openshift-elasticsearch -a <app>
+    rhc app-create https://github.com/normnorm/openshift-elasticsearch/blob/master/metadata/manifest.yml -a <app>
 
 If you want to create a Elasticsearch cluster, append the flag `--scaling`:
 
-    rhc app-create https://cartreflect-claytondev.rhcloud.com/github/ajagnanan/openshift-elasticsearch -a <app> --scaling
+    rhc app-create https://github.com/normnorm/openshift-elasticsearch/blob/master/metadata/manifest.yml -a <app> --scaling
 
 ### Adding extra nodes to cluster
 To add more nodes to the cluster, simply add more gears:
@@ -36,59 +36,17 @@ Elasticsearch configuration is built on-the-fly with the file `config/elasticsea
 Nginx is configured by editing the file `nginx.conf.erb` from the git repo's root.
 
 #### Kibana
-Kibana is configured by editing the file `kibana.yml.erb` from the git repo's root.
+Kibana be accessed by `port-forward`ing to your rhc client and using a local install of kibana to access.  This is a better alternative than having the kibana overhead on small gears and exposing it to the world through an open port. 
 
 #### Security
 
-Authentication and authorization is handled by elastic.co. The two plugins needed are `license` and `shield`. The steps to enable security are:
+Authentication and authorization is handled by NGINX - in the intrest of keeping things simple and free - sheild is not required for basic security.
 
-  - uncomment these two plugins in your repo's `plugins.txt` file
+You can create a basicauth login and add it to the file:
+`template/htpasswd`
 
-    ```
-    elasticsearch/license/latest
-    elasticsearch/shield/latest
-    ```
-  - uncomment the credential lines in your repo's `kibana.yml.erb` file
-  
-    ```
-    kibana_elasticsearch_username: kibana
-    kibana_elasticsearch_password: elastic
-    ```
-  - push repo
-  
-    ```
-    git commit -a -m 'adding authentication and authorization'
-    git push
-    ```
+An example login is present you should make this your own.
 
-The `esusers` utility can be run with the following command:
-  
-  ```
-  $OPENSHIFT_ELASTICSEARCH_DIR/usr/bin/shield/esusers
-  e.g. $OPENSHIFT_ELASTICSEARCH_DIR/usr/bin/shield/esusers useradd admin -r admin
-  ```
-The server should not need to be restarted. 
-A default `kibana` user is bootstrapped so that Kibana will work.
-
-Caveat:
-The `config` directory that elasticsearch is using is located in `$OPENSHIFT_REPO_DIR/config`, but the `esusers` script updates the `$OPENSHIFT_ELASTICSEARCH_DIR/usr/config` directory. For now, the following can be done in order for credentials to be picked up:
-
-  ```
-  cp -R $OPENSHIFT_ELASTICSEARCH_DIR/usr/config/shield $OPENSHIFT_REPO_DIR/config
-  ```
-
-Do note that this will overwrite the bootstrapped configs, so re-adding the `kibana` user is necessary.
-
-### Updates
-
-Only Kibana is upgradeable. The setup looks at an environment variable to handle the upgrade.
-
-The steps are as follows:
-
-  - rhc set-env KIBANA_VERSION=4.0.2 -a <app> --namespace <domain>
-  - trigger a `deploy` by pushing a change with git
-
-Note: only Kibana 4 is supported by this cartridge
 
 ### License
 This cartridge is [MIT](http://opensource.org/licenses/MIT) licensed.
