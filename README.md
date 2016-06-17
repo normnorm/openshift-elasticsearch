@@ -4,11 +4,11 @@ This cartridge provides an Elasticsearch cluster as a standalone application Ela
 
 To create your Elasticsearch app, run:
 
-    rhc app-create https://github.com/normnorm/openshift-elasticsearch/blob/master/metadata/manifest.yml -a <app>
+    rhc app-create https://raw.githubusercontent.com/normnorm/openshift-elasticsearch/master/metadata/manifest.yml -a <app>
 
 If you want to create a Elasticsearch cluster, append the flag `--scaling`:
 
-    rhc app-create https://github.com/normnorm/openshift-elasticsearch/blob/master/metadata/manifest.yml -a <app> --scaling
+    rhc app-create https://raw.githubusercontent.com/normnorm/openshift-elasticsearch/master/metadata/manifest.yml -a <app> --scaling
 
 ### Adding extra nodes to cluster
 To add more nodes to the cluster, simply add more gears:
